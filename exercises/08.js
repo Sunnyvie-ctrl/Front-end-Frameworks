@@ -12,9 +12,9 @@ const BASE_URL = "https://jsonplaceholder.typicode.com";
 
 // 2. Add try/catch to fetchPosts().
 //    If the fetch fails, log "Failed to load posts".
-async function fetchPosts(params) {
+async function fetchPosts() {
     try{
-            const res = await fetch(BASE_URL + "/posts");
+        const res = await fetch(BASE_URL + "/posts");
         const data = await res.json();
 
         const firstFive = data.slice(0, 5);
