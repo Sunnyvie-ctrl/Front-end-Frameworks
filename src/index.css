@@ -459,10 +459,11 @@ select {
 }
 
 /* Movie Grid */
-.movies-grid {
+.movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, 180px);
+  gap: 20px;
+  justify-content: center;
 }
 
 .movies-grid.compact-view {
@@ -473,6 +474,7 @@ select {
 /* Movie Card */
 .movie-card {
   position: relative;
+  width: 180px;
   background-color: var(--bg-card);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -496,16 +498,17 @@ select {
 
 .poster-wrapper {
   position: relative;
-  width: 100%;
-  aspect-ratio: 2 / 3;
+  width: 180px;
+  height: 270px;
   background-color: #12151c;
   overflow: hidden;
 }
 
 .poster-img {
-  width: 100%;
-  height: 100%;
+  width: 180px;
+  height: 270px;
   object-fit: cover;
+  display: block;
   transition: transform 0.4s ease;
 }
 
