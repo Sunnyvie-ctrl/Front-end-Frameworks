@@ -23,4 +23,4 @@ export const GENRES = {
 export function getGenreNames(genreIds: number[] = []) {
   if (!genreIds || !genreIds.length) return ["General"];
   return genreIds.map(id => GENRES[id] || "Other");
-};
+}

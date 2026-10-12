@@ -4,7 +4,6 @@ import FilterBar from "../components/FilterBar";
 import StatsBanner from "../components/StatsBanner";
 import MovieCard from "../components/MovieCard";
 import MovieModal from "../components/MovieModal";
-import ApiConfigModal from "../components/ApiConfigModal";
 import { movieService } from "../services/movieService.js";
 import {
   getFavorites,
@@ -34,14 +33,9 @@ function HomePage() {
   const [selectedMovie, setSelectedMovie] =
     useState<Movie | null>(null);
 
-  const [isApiConfigOpen, setIsApiConfigOpen] =
-    useState(false);
-
   const [favCount, setFavCount] = useState(
     getFavorites().length
   );
-
-  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -89,7 +83,6 @@ function HomePage() {
     selectedGenre,
     sortBy,
     onlyFavorites,
-    refreshKey,
   ]);
 
   function handleToggleTheme() {
@@ -132,7 +125,6 @@ function HomePage() {
         theme={theme}
         onToggleTheme={handleToggleTheme}
         favCount={favCount}
-        onOpenApiConfig={() => setIsApiConfigOpen(true)}
       />
 
       <main className="main-container">

@@ -2,7 +2,6 @@ import {
   Search,
   X,
   Heart,
-  Settings,
   Sun,
   Moon,
 } from "lucide-react";
@@ -17,7 +16,6 @@ type HeaderProps = {
   theme: Theme;
   onToggleTheme: () => void;
   favCount: number;
-  onOpenApiConfig: () => void;
 };
 
 function Header({
@@ -28,7 +26,6 @@ function Header({
   theme,
   onToggleTheme,
   favCount,
-  onOpenApiConfig,
 }: HeaderProps) {
   return (
     <header className="site-header">
