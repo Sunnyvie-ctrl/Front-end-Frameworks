@@ -1,17 +1,18 @@
-import type { Movie } from "../types";
 import MovieCard from "./MovieCard";
+import type { Movie } from "../types";
 
 type MovieListProps = {
   movies: Movie[];
+  viewMode: "grid" | "list";
 };
 
-function MovieList({ movies }: MovieListProps) {
+function MovieList({ movies, viewMode }: MovieListProps) {
   if (movies.length === 0) {
-    return <p>No movies found.</p>
+    return <p>No movies found.</p>;
   }
 
   return (
-    <div className="movie-grid">
+    <div className={`movie-grid ${viewMode === "list" ? "list-view" : ""}`}>
       {movies.map((movie) => (
         <MovieCard
           key={movie.id}
