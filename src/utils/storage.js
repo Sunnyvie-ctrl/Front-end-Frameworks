@@ -56,3 +56,14 @@ export function getApiKey() {
 export function setApiKey(key) {
   localStorage.setItem(API_KEY, key.trim());
 }
+
+export function getReviews() {
+  const stored = localStorage.getItem("movie-app-reviews");
+  return stored ? JSON.parse(stored) : {};
+}
+
+export function saveReview(movieId, review) {
+  const reviews = getReviews();
+  reviews[movieId] = review;
+  localStorage.setItem("movie-app-reviews", JSON.stringify(reviews));
+}

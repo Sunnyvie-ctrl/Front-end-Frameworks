@@ -15,8 +15,7 @@ function HomePage() {
   const [isLiveApi, setIsLiveApi] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [selectedGenre, setSelectedGenre] =
-    useState<number | "all">("all");
+  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState("popularity");
   const [viewMode, setViewMode] =
     useState<"grid" | "list">("grid");
@@ -26,7 +25,7 @@ function HomePage() {
   const [selectedMovie, setSelectedMovie] =
     useState<Movie | null>(null);
 
-  useEffect(() => {
+useEffect(() => {
     const controller = new AbortController();
 
     async function loadMovies() {
@@ -36,7 +35,7 @@ function HomePage() {
       try {
         const data = await movieService.fetchMovies({
           search,
-          genre: selectedGenre,
+          genres: selectedGenres, // 1. Ensure this says "genres: selectedGenres"
           sort: sortBy,
           onlyFavorites,
           signal: controller.signal,
@@ -69,10 +68,23 @@ function HomePage() {
     };
   }, [
     search,
-    selectedGenre,
+    selectedGenres, 
     sortBy,
     onlyFavorites,
   ]);
+
+  function handleGenreToggle(genreId: number | "all") {
+  if (genreId === "all") {
+    setSelectedGenres([]); // Clear all filters
+    return;
+  }
+  
+  setSelectedGenres((prev) => 
+    prev.includes(genreId)
+      ? prev.filter((id) => id !== genreId) // Remove if already selected
+      : [...prev, genreId] // Add if not selected
+  );
+}
 
   function handleToggleFavorites() {
     setOnlyFavorites((current) => !current);
@@ -86,10 +98,10 @@ function HomePage() {
           0
         ) / movies.length;
 
-  const activeGenre =
-    selectedGenre === "all"
+  const activeGenres =
+    selectedGenres.length === 0
       ? "All Movies"
-      : GENRES[selectedGenre] ?? "Unknown";
+      : selectedGenres.map((id) => GENRES[id] ?? "Unknown").join(", ");
 
   return (
     <div className="app-layout">
@@ -104,13 +116,13 @@ function HomePage() {
         <StatsBanner
           totalMovies={movies.length}
           averageRating={averageRating}
-          activeGenre={activeGenre}
+          activeGenre={activeGenres}
           isLiveApi={isLiveApi}
         />
 
         <FilterBar
-          selectedGenre={selectedGenre}
-          onGenreChange={setSelectedGenre}
+          selectedGenres={selectedGenres}
+          onGenreChange={handleGenreToggle}
           sortBy={sortBy}
           onSortChange={setSortBy}
           viewMode={viewMode}
