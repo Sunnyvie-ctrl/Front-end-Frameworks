@@ -1082,6 +1082,120 @@ select {
   border-color: rgba(59, 130, 246, 0.3);
 }
 
+
+.movie-modal {
+  background: #12141d; 
+  color: #ffffff;
+  border-radius: 16px;
+  width: 90vw;
+  max-width: 850px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.movie-modal-content {
+  display: flex;
+  flex-direction: row;
+  padding: 32px;
+  gap: 32px;
+  position: relative;
+  z-index: 2; 
+}
+
+.movie-modal-poster {
+  width: 260px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.movie-modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.movie-modal-overview {
+  line-height: 1.6;
+  color: #a0a5b1;
+}
+
+.movie-modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 24px; /* Creates clean, wide spacing between year, rating, and votes */
+  font-size: 0.95rem;
+  color: #a0a5b1;
+  font-weight: 500;
+}
+
+.movie-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.movie-modal-actions button,
+.movie-modal-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.movie-modal-actions button {
+  background-color: var(--accent); 
+  color: #ffffff;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.movie-modal-actions button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.movie-modal-actions a {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.movie-modal-actions a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .movie-modal-content {
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    text-align: center;
+  }
+  
+  .movie-modal-poster {
+    width: 200px;
+  }
+  
+  .movie-modal-info {
+    align-items: center;
+  }
+}
+
 @media (max-width: 768px) {
   .site-nav {
     order: 2;

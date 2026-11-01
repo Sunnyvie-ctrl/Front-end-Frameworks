@@ -5,14 +5,8 @@ import StatsBanner from "../components/StatsBanner";
 import MovieCard from "../components/MovieCard";
 import MovieModal from "../components/MovieModal";
 import { movieService } from "../services/movieService.js";
-import {
-  getFavorites,
-  getTheme,
-  setTheme,
-  toggleFavorite,
-} from "../utils/storage.js";
 import { GENRES } from "../data/genres";
-import type { Movie, Theme } from "../types";
+import type { Movie } from "../types";
 
 function HomePage() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -28,14 +22,9 @@ function HomePage() {
     useState<"grid" | "list">("grid");
 
   const [onlyFavorites, setOnlyFavorites] = useState(false);
-  const [theme, setThemeState] = useState<Theme>(getTheme());
 
   const [selectedMovie, setSelectedMovie] =
     useState<Movie | null>(null);
-
-  const [favCount, setFavCount] = useState(
-    getFavorites().length
-  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -85,21 +74,8 @@ function HomePage() {
     onlyFavorites,
   ]);
 
-  function handleToggleTheme() {
-    const newTheme: Theme =
-      theme === "dark" ? "light" : "dark";
-
-    setThemeState(newTheme);
-    setTheme(newTheme);
-  }
-
   function handleToggleFavorites() {
     setOnlyFavorites((current) => !current);
-  }
-
-  function handleToggleMovieFavourite(movie: Movie) {
-    const updatedFavorites = toggleFavorite(movie);
-    setFavCount(updatedFavorites.length);
   }
 
   const averageRating =
@@ -122,9 +98,6 @@ function HomePage() {
         onSearch={setSearch}
         onlyFavorites={onlyFavorites}
         onToggleFavorites={handleToggleFavorites}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-        favCount={favCount}
       />
 
       <main className="main-container">
@@ -144,7 +117,6 @@ function HomePage() {
           onViewChange={setViewMode}
         />
 
-
         {isLoading && <p>Loading...</p>}
 
         {error && (
@@ -158,19 +130,19 @@ function HomePage() {
             {movies.length === 0 ? (
               <p>No movies found.</p>
             ) : (
-            <div
-              className={`movie-grid ${
-                viewMode === "list" ? "list-view" : ""
-              }`}
-            >
-              {movies.map((movie) => (
-                <MovieCard
-                  key={movie.id}
-                  movie={movie}
-                  onClick={() => setSelectedMovie(movie)}
-                />
-              ))}
-            </div>
+              <div
+                className={`movie-grid ${
+                  viewMode === "list" ? "list-view" : ""
+                }`}
+              >
+                {movies.map((movie) => (
+                  <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    onClick={() => setSelectedMovie(movie)}
+                  />
+                ))}
+              </div>
             )}
           </>
         )}
@@ -178,22 +150,8 @@ function HomePage() {
 
       <MovieModal
         movie={selectedMovie}
-        isFavourite={
-          selectedMovie
-            ? getFavorites().some(
-                (favorite) => favorite.id === selectedMovie.id
-              )
-            : false
-        }
-        onToggleFavourite={() => {
-          if (selectedMovie) {
-            handleToggleMovieFavourite(selectedMovie);
-          }
-        }}
         onClose={() => setSelectedMovie(null)}
       />
-
-
     </div>
   );
 }

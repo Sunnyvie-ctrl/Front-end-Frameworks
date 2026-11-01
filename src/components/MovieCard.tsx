@@ -1,7 +1,7 @@
 import type { Movie } from "../types";
 import { getPosterUrl } from "../data/sampleMovies";
 import { getGenreNames } from "../data/genres";
-import { getFavorites, toggleFavorite } from "../utils/storage.js";
+import { useAppContext } from "../context/AppContext";
 import { Heart } from "lucide-react";
 
 type MovieCardProps = {
@@ -10,14 +10,8 @@ type MovieCardProps = {
 };
 
 function MovieCard({ movie, onClick }: MovieCardProps) {
-  const isFavourite = getFavorites().some(
-    (favorite) => favorite.id === movie.id
-  );
-
-  function handleFavourite(event: React.MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation();
-    toggleFavorite(movie);
-  }
+  const { isFavorite, toggleFavorite } = useAppContext();
+  const isFavourite = isFavorite(movie.id);
 
   const releaseYear = movie.release_date
     ? movie.release_date.slice(0, 4)
@@ -29,9 +23,25 @@ function MovieCard({ movie, onClick }: MovieCardProps) {
     <article
       className="movie-card"
       tabIndex={0}
-      aria-label={`${movie.title} (${releaseYear})`}
-      onClick={onClick}
+      style={{ position: "relative" }}
     >
+      <div
+        onClick={(e) => {
+          e.preventDefault();
+          onClick();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") onClick();
+        }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 5,
+          cursor: "pointer",
+        }}
+        title="View Details"
+      />
+
       <div className="poster-wrapper">
         <img
           src={getPosterUrl(movie.poster_path)}
@@ -52,48 +62,44 @@ function MovieCard({ movie, onClick }: MovieCardProps) {
               className={`favorite-btn ${
                 isFavourite ? "is-favorite" : ""
               }`}
+              style={{
+                position: "relative",
+                zIndex: 10,
+              }}
               title={
                 isFavourite
                   ? "Remove from Watchlist"
                   : "Add to Watchlist"
               }
-              aria-label={
-                isFavourite
-                  ? "Remove from Watchlist"
-                  : "Add to Watchlist"
-              }
-              onClick={handleFavourite}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleFavorite(movie);
+              }}
             >
               <Heart
                 size={16}
                 fill={isFavourite ? "currentColor" : "none"}
+                style={{ pointerEvents: "none" }}
               />
             </button>
           </div>
 
-          <span className="quick-view-hint">
+          <span className="quick-view-hint" style={{ position: "relative", zIndex: 4 }}>
             View Details
           </span>
         </div>
       </div>
 
-      <div className="movie-card-info">
-        <h2 className="movie-card-title">
-          {movie.title}
-        </h2>
-
+      <div className="movie-card-info" style={{ position: "relative", zIndex: 4 }}>
+        <h2 className="movie-card-title">{movie.title}</h2>
         <div className="movie-card-meta">
           <span>{releaseYear}</span>
-          <span>
-            {movie.vote_count.toLocaleString()} votes
-          </span>
+          <span>{movie.vote_count.toLocaleString()} votes</span>
         </div>
-
         <div className="movie-genres-tags">
           {genreNames.slice(0, 2).map((genre) => (
-            <span className="genre-tag" key={genre}>
-              {genre}
-            </span>
+            <span className="genre-tag" key={genre}>{genre}</span>
           ))}
         </div>
       </div>

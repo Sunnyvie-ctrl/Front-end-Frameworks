@@ -6,16 +6,13 @@ import {
   Moon,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import type { Theme } from "../types";
+import { useAppContext } from "../context/AppContext";
 
 type HeaderProps = {
   search: string;
   onSearch: (value: string) => void;
   onlyFavorites: boolean;
   onToggleFavorites: () => void;
-  theme: Theme;
-  onToggleTheme: () => void;
-  favCount: number;
 };
 
 function Header({
@@ -23,10 +20,10 @@ function Header({
   onSearch,
   onlyFavorites,
   onToggleFavorites,
-  theme,
-  onToggleTheme,
-  favCount,
 }: HeaderProps) {
+  const { theme, toggleTheme, favorites } = useAppContext();
+  const favCount = favorites.length;
+
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -90,12 +87,11 @@ function Header({
             <span className="count-badge">{favCount}</span>
           </button>
 
-
           <button
             type="button"
             className="theme-toggle-btn"
             title="Toggle theme"
-            onClick={onToggleTheme}
+            onClick={toggleTheme}
           >
             {theme === "dark" ? (
               <Sun size={18} />

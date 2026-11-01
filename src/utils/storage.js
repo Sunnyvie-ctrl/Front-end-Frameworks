@@ -20,11 +20,11 @@ export function toggleFavorite(movie) {
   const favorites = getFavorites();
 
   const exists = favorites.some(
-    (favorite) => favorite.id === movie.id
+    (favorite) => String(favorite.id) === String(movie.id)
   );
 
   const updatedFavorites = exists
-    ? favorites.filter((favorite) => favorite.id !== movie.id)
+    ? favorites.filter((favorite) => String(favorite.id) !== String(movie.id))
     : [...favorites, movie];
 
   localStorage.setItem(
@@ -34,6 +34,7 @@ export function toggleFavorite(movie) {
 
   return updatedFavorites;
 }
+
 
 export function getTheme() {
   const theme = localStorage.getItem(THEME_KEY);
