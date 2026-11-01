@@ -8,16 +8,13 @@ export function sortMovies(movies, sort) {
     switch (sort) {
       case "rating":
         return b.vote_average - a.vote_average;
-
       case "release_date":
         return (
           new Date(b.release_date).getTime() -
           new Date(a.release_date).getTime()
         );
-
       case "title":
         return a.title.localeCompare(b.title);
-
       case "popularity":
       default:
         return b.popularity - a.popularity;
@@ -28,16 +25,14 @@ export function sortMovies(movies, sort) {
 export const movieService = {
   async fetchMovies({
     search = "",
-    genre = "all",
+    genres = [], 
     sort = "popularity",
     onlyFavorites = false,
     page = 1,
     signal,
   } = {}) {
-    // Watchlist mode uses locally saved favourites.
     if (onlyFavorites) {
       const favorites = getFavorites();
-
       const normalizedSearch = search.trim().toLowerCase();
 
       const filteredFavorites = favorites.filter((movie) => {
@@ -46,9 +41,8 @@ export const movieService = {
           movie.title.toLowerCase().includes(normalizedSearch);
 
         const matchesGenre =
-          genre === "all" ||
-          genre === null ||
-          movie.genre_ids.includes(Number(genre));
+          genres.length === 0 ||
+          genres.every((g) => movie.genre_ids.includes(Number(g)));
 
         return matchesSearch && matchesGenre;
       });
@@ -65,7 +59,6 @@ export const movieService = {
 
     const apiKey = getApiKey();
 
-    // No API key → use local sample data.
     if (!apiKey) {
       const normalizedSearch = search.trim().toLowerCase();
 
@@ -75,9 +68,8 @@ export const movieService = {
           movie.title.toLowerCase().includes(normalizedSearch);
 
         const matchesGenre =
-          genre === "all" ||
-          genre === null ||
-          movie.genre_ids.includes(Number(genre));
+          genres.length === 0 ||
+          genres.every((g) => movie.genre_ids.includes(Number(g)));
 
         return matchesSearch && matchesGenre;
       });
@@ -92,12 +84,11 @@ export const movieService = {
       };
     }
 
-    // Decide which TMDB endpoint to use.
     let endpoint = "/movie/popular";
 
     if (search.trim()) {
       endpoint = "/search/movie";
-    } else if (genre !== "all" && genre !== null) {
+    } else if (genres.length > 0) {
       endpoint = "/discover/movie";
     }
 
@@ -110,8 +101,8 @@ export const movieService = {
       params.set("query", search.trim());
     }
 
-    if (endpoint === "/discover/movie" && genre !== "all") {
-      params.set("with_genres", String(genre));
+    if (endpoint === "/discover/movie" && genres.length > 0) {
+      params.set("with_genres", genres.join(","));
     }
 
     const response = await fetch(

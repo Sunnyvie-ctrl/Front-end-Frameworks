@@ -2,7 +2,7 @@ import { Grid2X2, List } from "lucide-react";
 import { GENRES } from "../data/genres";
 
 type FilterBarProps = {
-  selectedGenre: number | "all";
+  selectedGenres: number[]; 
   onGenreChange: (genre: number | "all") => void;
   sortBy: string;
   onSortChange: (sort: string) => void;
@@ -11,7 +11,7 @@ type FilterBarProps = {
 };
 
 function FilterBar({
-  selectedGenre,
+  selectedGenres,
   onGenreChange,
   sortBy,
   onSortChange,
@@ -24,7 +24,7 @@ function FilterBar({
         <button
           type="button"
           className={`genre-pill ${
-            selectedGenre === "all" ? "active" : ""
+            selectedGenres.length === 0 ? "active" : ""
           }`}
           onClick={() => onGenreChange("all")}
         >
@@ -36,7 +36,7 @@ function FilterBar({
             type="button"
             key={id}
             className={`genre-pill ${
-              selectedGenre === Number(id) ? "active" : ""
+              selectedGenres.includes(Number(id)) ? "active" : ""
             }`}
             onClick={() => onGenreChange(Number(id))}
           >
@@ -63,9 +63,7 @@ function FilterBar({
         <div className="view-toggle-group">
           <button
             type="button"
-            className={`view-btn ${
-              viewMode === "grid" ? "active" : ""
-            }`}
+            className={`view-btn ${viewMode === "grid" ? "active" : ""}`}
             onClick={() => onViewChange("grid")}
             title="Grid View"
             aria-label="Grid View"
@@ -75,9 +73,7 @@ function FilterBar({
 
           <button
             type="button"
-            className={`view-btn ${
-              viewMode === "list" ? "active" : ""
-            }`}
+            className={`view-btn ${viewMode === "list" ? "active" : ""}`}
             onClick={() => onViewChange("list")}
             title="List View"
             aria-label="List View"
